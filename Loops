@@ -1,0 +1,148 @@
+import java.io.FileInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+/**
+ * Takes an formatted input from a file 'courseData.txt' and outputs in the console the 
+ * scores of each different section (programs, midterms, final) and has the proper weighted 
+ * average as well as indicating whether the student in question has failed or passed their program.
+ * Computes the class average as well as calculated by each student average.
+ * 
+ * Methods used:
+ * scanInput(Scanner) - Takes the first 5 inputs from the courseData.txt and assigns them to relevant vars
+ * calcClass(Scanner) - Takes 4 inputs for each student and calculates the class weighted average from each student
+ * classDisplay(int, int, int, int, int, double) - Prints and formats all the inputs from classes and students
+ * 
+ * 
+ * @Daniel Yan 
+ * @date November 7th, 2017
+ */
+public class Yan_Daniel_HW_Loops_Files{
+    //Variables are declared static where all methods can acces them
+    //Declares a FileInputStream named fis
+        static FileInputStream fis;
+        //Declares all the necessary int vars with some initialized as needed
+        static int courseNumber, studentID = 0, programScore, midtermScore,finalScore, counter = 0,
+        numCheck = 1;
+        //Declares all necessary double vars with some initialized as needed
+        static double programWeight, midtermWeight, finalWeight, weightedAverage, total = 0, classAverage = 0;
+        //Declares a Scanner object 'input'
+        static Scanner input = null;
+    public static void main(String[] args) throws IOException
+    {   
+        //Filepath of your course data goes here
+        File file = new File("C:\\Users\\Daniel Yan\\Desktop\\BlueJ Projects\\CSSE 142\\HW");
+        //Try-Catch block to ensure the file is found and if not it prints an error message
+        try {
+            // //Initializes the fis FileInputStream to the intended file
+            fis = new FileInputStream("courseData.txt");  
+            input = new Scanner(fis);
+            //scanInput is only to be used once
+            scanInput(input);
+            //Checks if there is a next line in the file
+            while(input.hasNextLine()){
+                //While there is a next line, classCalc is used to take the inputs of all students
+                //and to display the class average
+                classCalc(input);
+            }
+
+        }
+        //Catches any file error, and prints out an error message if file isn't found
+        catch (IOException e){
+            System.err.println("File not found, closing down");
+            System.exit(0);
+
+        }
+
+    }
+    /**
+     * Takes the single entry data in the courseData.txt and assigns them to the corresponding values
+     * Does the first instance of a class due to no sentinel value being present for the first instance
+     * @param Scanner objecet 
+       */
+    public static void scanInput(Scanner input){
+            //Takes the first 3 double numbers in the file and reads them as the weight
+            programWeight = input.nextDouble();
+            midtermWeight = input.nextDouble();
+            finalWeight = input.nextDouble();
+            //Takes the 4th number as the course number for the class
+            courseNumber = input.nextInt();
+            //Takes the 5th number as the first instance of student ID
+            studentID = input.nextInt();
+            //Prints out the first instance of the class data and course number
+            System.out.println("Grade Data For Class " + courseNumber);     
+    }
+    /**
+     * Takes the class inputs through each student from courseData.txt and assigns them to corresponding values
+     * Calculates the weighted class average based upon each student's average
+     * @param Scanner object
+       */
+    public static void classCalc(Scanner input){
+     //Takes the next 3 numbers and assigns them to each score value
+                programScore = input.nextInt();
+                midtermScore = input.nextInt();
+                finalScore = input.nextInt();
+                //Calculates the weightedAverage according to the first 3 double values
+                weightedAverage = (programWeight*programScore) + (midtermWeight*midtermScore) + 
+                (finalWeight*finalScore);
+                //Uses the method classDisplay in order to properly format and display eahc value
+                classDisplay(studentID,courseNumber,programScore,midtermScore,finalScore,weightedAverage);
+                //Takes the total weighted average 
+                total += weightedAverage;
+                //Counter is incremented each loop as it represents a student
+                counter++;
+                //This is an gate-case where we check the 4th number after finalScore
+                //.hasNext() is used in order to ensure the last student doesn't cause an error
+                if(input.hasNext()) {
+                    numCheck = input.nextInt();
+                }
+                //Prints out the class average (as this is assuming it's the last student)
+                else {
+                    classAverage = total/counter;
+                    System.out.printf("%s %.2f%n","Class Average:",classAverage);
+                }
+                //Checks the sentinel value of 0 and assigns the studentID to it 
+                //Given that .nextInt() for numCheck stores the studentID value, we assign
+                //it to studentID to avoid the wrong int order
+                if(numCheck > 0) {
+                    studentID = numCheck;
+                }
+                //This is the end of a 'student' and calculates the weighted average and class average
+                else{
+
+                    classAverage = total/counter;
+                    //%n%n is used as .nextLine() eats one line return
+                    System.out.printf("%s %.2f%n%n","Class Average:",classAverage);
+                    courseNumber = input.nextInt();
+                    studentID = input.nextInt();
+                    //Resets three vars in order to have correct data for a new student
+                    numCheck = 1; total = 0; counter = 0;
+                    System.out.println("Grade Data For Class " + courseNumber);
+                }
+
+    }
+    /**
+     * Displays and formats the contents of the courseData.txt and determines whether the student
+     * has failed or passed the program
+     * @param 5 ints, 1 double to receive all necessary data
+       */
+      //Takes in all necessary arguements to display
+    public static void classDisplay(int classID, int courseNumber,
+    int programScore, int midtermScore, int finalScore, double weightedAverage){
+        String passFail = "Fail";
+        //Checks if the programScore is enough to pass or not
+        if(programScore >= 70) passFail = "Pass";
+        //Spaces are used because tabs are not consistent
+        System.out.println("ID     Programs     Midterm     Final" + 
+            "     Weighted Average     Programs grade");
+            //Formatted text to nicely display each section
+        System.out.println("--     --------     -------     -----     ----------------"
+            + "     --------------");
+            //\t is used ocassionally as tabs, but they're not consistent
+        //Prints out the formatted numbers with printf to only indicate 2 decimal points
+        System.out.printf("%d     %d\t       %d\t  %d\t      %.2f\t       %s%n%n",
+            classID, programScore, midtermScore, finalScore,weightedAverage,passFail);
+    }
+}
