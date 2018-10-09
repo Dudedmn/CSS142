@@ -1,0 +1,560 @@
+import java.util.Scanner;
+import java.util.Arrays;
+/**
+ * Core class that includes all calculation methods and all print methods. Serves to be a basic calculator simulator that serves to imitate or replicate the functions that a 
+ * regular scientific calculator would be able to do.
+ * 
+ * Methods included:
+ * 
+ * Prompts and text:
+
+ * chooseLog() - Prompts the user to choose a type of log calculation: natural log, base 10 log, and any-base log.
+ * chooseTrig() - Prompts the user to choose a type of trigonometric calculation: sine, cosine, tangent, secant, cosecant, cotangent. Calculates the appropriate type in radians.
+ * chooseCalc() - Prompts the user to choose a specific 'basic' calculation: addition, subtraction, multiplication, division, exponents, and roots.
+ * chooseMatrix() - Prompts the user to specify the dimensions of a matrix and to either randomize the values of the matrix or specify specific value at a user-defined location.
+ * These four methods are all public as they are used by multiple classes.
+ * The following methods are private as they are either contained within the public method or only used in this class.
+ * printMatrix() - Prints out the matrix using nested for loops.
+ * prompter() - Asks whether the user wants to run the calculator simulation again and repeats the simulation if desired or ends the simulation.
+ * 
+ * Array and matrix (2D array) specific:
+ * generateMatrix(double rows, double cols) - Generates a matrix with a row x col dimension based upon inputted values, returns the generated array.
+ * randomizeMatrix(double[][]) - Randomizes each element in a matrix based upon an double[][] input with Math.Random(), returns a new array.
+ * alterMatrix(double[][]) - Alters a specific index value of the matrix with user input and prompts whether the user wants to alter another one, returns the altered array.
+ * 
+ * For basic calculations:
+ * addition(double a, double b) - Adds two double values using a basic addition operator and returns the double value.
+ * subtraction(double a, double b) - Subtracts two double values using a basic subtraction operator. 
+ * multiplication(double a, double b) - Multiplies two double values using a basic multiplication operator and returns the double value. 
+ * division( double a, double b) - Divides two double values using a basic division operator and returns the double value.
+ * nthPower(double a, int n) - Takes the exponent of the value to the nth power utilizing Math.pow() and returns the double value.
+ * nthRoot(double a, int n) - Takes the value and 'roots' it to the nth root (ex :square root for n = 2) utilizing Math.pow() and returns the double value.
+ * 
+ * For trigonometric calculations (radian):
+ * sine(double a) - Calculates the sine of var a in radians using Math.sin() and returns the double value.
+ * cosine(double a) - Calculates the cosine of var a in radians using Math.cos() and returns the double value.
+ * tangent(double a) - Calculates the tangent of var a in radians using Math.tan() and returns the double value.
+ * secant(double a) - Calculates the secant of var a in radians using (1 / sine(a)) and returns the double value.
+ * cosecant(double a) - Calculates the cosecant of var a in radians using (1 / cosine(a)) and returns the double value.
+ * cotangent (double a) - Calculates the cotangent of var a in radians using (1 / tangent(a)) and returns the double value.
+ * 
+ * For logarithmic calculations:
+ * naturalLog(double a) - Calculates the natural log of var a using Math.log() and returns the double value.
+ * log10(double a) - Calculates the log with 10 base of var a using Math.log10() and returns the double value.
+ * logAnyBase(double a, double base) - Calculates the log with a variable base of var a using (naturalLog(a) / naturalLog(base)) and returns the double value.
+ * 
+ *
+ * @author (Daniel Yan)
+ * @version (12/5/2017)
+ */
+public class Calculations{ 
+    /**
+     * Preconditions: None
+     * Assumptions: User correctly inputs each Scanner input value and doesn't desire to go back a menu choice
+     * Purpose: Allows the user to choose 3 different log calculations, which replicates the logarithimic calculations a calculator would have.
+     */
+    public void chooseLog(){
+        Scanner kb = new Scanner(System.in);
+        //Int for the switch case
+        int choice= 0; 
+        double value = 0, base = 0;
+        //Utilized for a while loop to check if the choices entered are valid
+        boolean repeat = true;
+        //User choices
+        System.out.print("Choose your intended logarithimic calculation:\n " +
+            "1. Natural Log\n " + 
+            "2. Base 10 log\n " + 
+            "3. Any base log\n");
+
+        choice = kb.nextInt();
+        //Checks to see if the user input is within the valid range, otherwise the user is prompted to try again
+        while(repeat){
+            if(choice > 3 || choice < 1){
+                System.out.println("Enter a valid choice, try again.");
+                choice = kb.nextInt();
+            }
+            else repeat = false;
+        }
+        
+        //Switch case that refers to each user choice and calls and prints the appropriate methods and values
+        //Goes in the form of: Prompt for a value, take value, print value (and call method)
+        switch(choice){
+
+            case 1:
+            System.out.println("Provide a value for natural log");
+            value = kb.nextDouble();
+            naturalLog(value);
+            //Printf is simply used to number formatting
+            System.out.printf("%s%.2f%s%.2f", "Value of natural log base for (", value,
+                ") is: ",naturalLog(value));
+            break;
+
+            case 2:
+            System.out.println("Provide a value for log 10 base");
+            value = kb.nextDouble();
+            System.out.printf("%s%.2f%s%.2f", "Value of log base 10 for (", value,
+                ") is: ",log10(value));
+            break;
+
+            case 3:
+            System.out.println("Provide a value for the base then another for the log");
+            base = kb.nextDouble();
+            value = kb.nextDouble();
+            System.out.printf("%s%.2f%s%.2f%s%.2f", "Value of log base (", base ,") for (", value,
+                ") is: ",logAnyBase(value, base));
+            break;
+
+        }
+        //Asks whether the user wants to make another calculation
+        prompter();
+
+    }
+    /**
+     * Preconditions: None
+     * Assumptions: User correctly inputs each Scanner input value, doesn't desire to go back a menu choice, and only needs values calculated in radians.
+     * Purpose: Allows the user to choose which trigonometric function they would like to compute to replicate the trigonometric calculations a real calculator would use.
+     */
+    public void chooseTrig(){
+        Scanner kb = new Scanner(System.in);
+        //Two int choices are initialized for switch cases as there are multiple menus
+        int firstChoice = 0, secondChoice; 
+        double value = 0;
+        boolean repeat = true;
+        System.out.print("Choose your intended trigonmetric calculation:\n " +
+            "1. Sine, Cosine, Tangent.\n 2. Secant, Cosecant, Cotangent");
+
+        firstChoice = kb.nextInt(); 
+        do {
+            //Do-while loop that will iterate atleast once, if-else branching statements are used here as an replacement to switch case
+            if(firstChoice == 1 || firstChoice == 2){
+                //Values for trigonometric calculations will be done in radians
+                System.out.println("Now input the value that you desire to be calculated (in radians)");
+                value = kb.nextDouble();
+                if(firstChoice == 1){
+
+                    System.out.println(
+                        "1. Sine\n" +
+                        "2. Cosine\n" +
+                        "3. Tangent\n");
+
+                    secondChoice = kb.nextInt();
+
+                    switch(secondChoice){
+                        case 1:
+                        System.out.printf("%s%.2f%s%.2f", "Value of sin(", value,") is: "
+                        ,sine(value));
+                        break;
+
+                        case 2:
+                        System.out.printf("%s%.2f%s%.2f", "Value of cosin(", value,") is: "
+                        ,cosine(value));
+                        break;
+
+                        case 3:
+                        System.out.printf("%s%.2f%s%.2f", "Value of tangent(", value,") is: "
+                        ,tangent(value));
+                        break;
+                    }
+                    repeat = false;
+                }
+                //Second subset of options
+                if(firstChoice == 2){
+
+                    System.out.println(
+                        "1. Secant\n" +
+                        "2. Cosecant\n" +
+                        "3. Cotangent\n");
+
+                    secondChoice = kb.nextInt();
+                    switch(secondChoice){
+                        case 1:
+                        System.out.printf("%s%.2f%s%.2f", "Value of secant (", value,") is: "
+                        ,secant(value));
+                        break;
+
+                        case 2:
+                        System.out.printf("%s%.2f%s%.2f", "Value of cosecant (", value,") is: "
+                        ,cosecant(value));
+                        break;
+
+                        case 3:
+                        System.out.printf("%s%.2f%s%.2f", "Value of cotangent (", value,") is: "
+                        ,cotangent(value));
+                        break;
+                    }
+                    repeat = false;
+                }
+            }
+            //This will tell the user to enter a correct value if the entered value is outside of the valid range
+            else{
+                System.out.println("Please enter a correct value");
+                firstChoice = kb.nextInt();
+            }
+        } while(repeat);
+
+        prompter();
+
+    }
+    /**
+     * Preconditions: None
+     * Assumptions: User correctly inputs each Scanner input value, doesn't desire to go back a menu choice, and correctly inputs the order of each calculation.
+     * Purpose: Allows the user to choose which basic mathematical operations they would like to compute to replicate the same basic mathetmacial calculations a real calculator would use.
+     */
+    public void chooseCalc(){
+        Scanner kb = new Scanner (System.in);
+        int choice = 0;
+        //Two double values are used to print out both elements used in each calculation method
+        double value1 = 0, value2;
+        boolean repeat = true;
+        System.out.println("Select your intended calculation:\n" + 
+            "1. Addition\n" +
+            "2. Subtraction\n" +
+            "3. Multiplication\n" +
+            "4. Division\n" +
+            "5. nthPower\n" +
+            "6. nthRoot\n");
+            
+        choice = kb.nextInt(); 
+        while(repeat){
+            if(choice > 6 || choice < 1){
+                System.out.println("Enter a valid choice, try again.");
+                choice = kb.nextInt();
+            }
+            else repeat = false;
+        }
+        //Asks for two values that need to be calculated then runs the switch case
+        System.out.println("Enter two values that you want to be calculated");
+        value1 = kb.nextDouble();
+        value2 = kb.nextDouble();
+
+        switch(choice){
+            case 1:
+            System.out.printf("%s%.2f%s%.2f%s%.2f", "Value of adding (", value1,
+                " and " , value2, ") is: ",addition(value1, value2));
+
+            break;
+
+            case 2:
+            System.out.printf("%s%.2f%s%.2f%s%.2f", "Value of subtracting (", value1,
+                " and " , value2, ") is: ",subtraction(value1, value2));
+            break;
+
+            case 3:
+            System.out.printf("%s%.2f%s%.2f%s%.2f", "Value of multiplying (", value1,
+                " and " , value2, ") is: ", multiplication(value1, value2));
+            break;
+
+            case 4:
+            System.out.printf("%s%.2f%s%.2f%s%.2f", "Value of dividing (", value1,
+                " by " , value2, ") is: ", division(value1, value2));
+            break;
+
+            case 5:
+            System.out.printf("%s%.2f%s%.2f%s%.2f", "Value of (", value1,
+                " to the power of " , value2, ") is: ", nthPower(value1, value2));
+            break;
+
+            case 6:
+            System.out.printf("%s%.2f%s%.2f%s%.2f", "Value of (", value1,
+                " to the root base of " , value2, ") is: ", nthRoot(value1, value2));
+            break;  
+        }
+
+        prompter();
+    }
+    
+    /**
+     * Preconditions: 2 valid ints.
+     * Assumptions: User inputs two valid ints.
+     * Purpose: Generate a 2D array to imitate the matrix function a real calculator uses and returns the array generated.
+     */
+    
+    private double[][] generateMatrix(int rows, int cols){
+        double[][] arr = new double[rows][cols];
+        return arr;
+    }
+    
+    /**
+     * Preconditions: A valid 2D array.
+     * Assumptions: User inputs a 2D array that has a length > 0.
+     * Purpose: Randomize each element of the 2D array with user-defined limits in order to 'fill' out the matrix without individual user input and returns a copy of the random array.
+     */
+    private double[][] randomizeMatrix(double[][] arr){
+        Scanner kb = new Scanner(System.in);
+        int start = 0, end = 0;
+        System.out.println("Enter in the starting limit and then the ending limit of the randomized" 
+            + " elements");
+        start = kb.nextInt();
+        end = kb.nextInt();
+
+        double[][] newArr = new double[arr.length][arr[0].length];
+        for(int i = 0; i < arr.length; i++){
+            for(int j = 0; j < arr[0].length; j++){
+                newArr[i][j] = (Math.random() * (end - start)) + start;
+            }
+        }
+        System.out.println("Your new matrix");
+        printMatrix(newArr);
+        return newArr;
+    }
+    
+    /**
+     * Preconditions: A valid 2D array.
+     * Assumptions: User inputs a 2D array that has a length > 0.
+     * Purpose: Prints out the 2D array to imitate how a calculator outputs the matrix a user creates.
+     */
+    private void printMatrix(double[][] arr){
+        for(int i = 0; i < arr.length; i++){
+            for(int j = 0; j < arr[0].length; j++){
+                if(j == arr[0].length - 1) {
+                    System.out.printf("%.2f",arr[i][j]);
+                }
+                else{
+                    System.out.printf("%.2f%s",arr[i][j], ", ");
+                }
+            }
+            System.out.println();
+        }
+
+    }
+    
+    /**
+     * Preconditions: A valid 2D array.
+     * Assumptions: User inputs a 2D array that has a length > 0, user doesn't need to use a pre-filled array.
+     * Purpose: Allows the user to alter a valid specific index value in the 2D array one by one with a prompt asking for repeating alteration then prints it out.
+     */
+    private double[][] alterMatrix(double[][] arr){
+        int newRow, newCol, row, col; 
+        boolean repeat = true;
+        while(repeat){
+            Scanner kb = new Scanner(System.in);
+            System.out.println("Enter the row and then column you'd like to alter");
+            row= kb.nextInt();
+            col = kb.nextInt();
+            while(row >= arr.length || row < 0 || col >= arr[0].length || col < 0){
+                System.out.println("You are entering an invalid index value, please try again.");
+                System.out.println("For reference the array row length is [" + arr.length + 
+                    "] and the array col length is [" + arr[0].length + "]");
+                row = kb.nextInt();
+                col = kb.nextInt();
+            }
+            double value = 0; String choice = "";
+            System.out.println("What is the new value you are assigning to the index?");
+            value = kb.nextDouble();
+            arr[row][col] = value;
+            System.out.println("Would you like to alter another value [y/n]?");
+            kb.nextLine();
+            choice = kb.nextLine();
+            if(choice.equalsIgnoreCase("y") || choice.equalsIgnoreCase("yes")){
+                repeat = true;
+            }
+            else{
+                repeat = false;
+            }
+        }
+        System.out.println("Your new matrix");
+        printMatrix(arr);
+        return arr;
+    }
+    
+     /**
+     * Preconditions: None
+     * Assumptions: User correctly inputs each Scanner input value and doesn't desire to go back a menu choice
+     * Purpose: Allows the user to choose 2 different matrix (2D arrays) options, one to fill out a matrix with random values, and one to alter a specific value in the matrix.
+     * Made in order to imitate the matrix function that calculators may contain albeit at a limited usage.
+     */
+    public void chooseMatrix(){
+        double[][] matrix;
+        Scanner kb = new Scanner(System.in);
+        int rows = 0, cols = 0, choice = 0;
+        System.out.println("Please set the dimensions of your Matrix, rows by columns");
+        rows = kb.nextInt();
+        cols = kb.nextInt();
+        matrix = generateMatrix(rows,cols);
+        System.out.println("What would you like to do with your matrix? \n" +
+            "1. Assign random elements to your matrix. \n" +
+            "2. Specify element(s) in the matrix. \n");
+
+        choice = kb.nextInt();
+        switch(choice){
+            case 1:
+            randomizeMatrix(matrix);
+            prompter();
+            break;
+
+            case 2:
+            alterMatrix(matrix);
+            prompter();
+            break;
+
+            default:
+            System.out.println("Please enter a correct value");
+            chooseMatrix();
+            break;
+        }
+    }
+    
+     /**
+     * Preconditions: None
+     * Assumptions: User inputs a valid scanner option.
+     * Purpose: Prompts the user to repeat a simulated calculation through the Display class object disp with method selection().
+     */
+    private void prompter(){
+        Display disp = new Display();
+        String choice = "";    
+        Scanner kb = new Scanner(System.in);
+        System.out.println("\nWould you like to make another calculation [y/n] ? \n");
+        choice = kb.nextLine();
+        if(choice.equalsIgnoreCase("y") || choice.equalsIgnoreCase("yes")){
+            disp.selection();
+        }
+        else if (choice.equalsIgnoreCase("n") || choice.equalsIgnoreCase("no")){
+            System.out.println("Thanks for using the calculator simulator!");
+        }
+        else {
+            System.out.println("Goodbye.");
+        }
+
+    }
+
+    //Basic calculations
+     /**
+     * Preconditions: Two double values.
+     * Assumptions: User inputs two double values.
+     * Purpose: Adds two values and returns it.
+     */
+    private double addition(double a, double b){
+        return a + b;
+    }
+
+    /**
+     * Preconditions: Two double values.
+     * Assumptions: User inputs two double values.
+     * Purpose: Subtracts two values and returns it.
+     */
+    private double subtraction(double a, double b){
+        return a - b;
+    }
+    
+    /**
+     * Preconditions: Two double values.
+     * Assumptions: User inputs two double values.
+     * Purpose: Divides two values and returns it.
+     */
+    private double division(double a, double b){
+        //If 0 is used as input for double b, Infinity will be returned
+        return a / b;
+    }
+    
+    /**
+     * Preconditions: Two double values.
+     * Assumptions: User inputs two double values.
+     * Purpose: Multiplies two values and returns it.
+     */
+    private double multiplication(double a, double b){
+        return a * b;
+    }
+
+    //Logarithms    
+    /**
+     * Preconditions: A double value.
+     * Assumptions: User inputs a double value.
+     * Purpose: Calculates the natural log of the user value and returns it.
+     */
+    private double naturalLog(double a){
+        return Math.log(a);
+    }
+    
+    /**
+     * Preconditions: A double value.
+     * Assumptions: User inputs a double value.
+     * Purpose: Calculates the base 10 log of the user value and returns it.
+     */
+    private double log10 (double a){
+        return Math.log10(a);
+    }
+    
+    /**
+     * Preconditions: Two double values.
+     * Assumptions: User inputs two double values.
+     * Purpose: Calculates the log at an user defined base value (with double base) for user value and returns it.
+     */
+    private double logAnyBase(double a, double base){
+        //Returns a value equivalent that has log(a) at with user-defined base
+        return naturalLog(a) / naturalLog(base);
+    }
+
+    //Trigonmetrics 
+    /**
+     * Preconditions: A double value.
+     * Assumptions: User inputs a double value.
+     * Purpose: Calculates the sine of the user value and returns it.
+     */
+    private double sine(double a){
+        return Math.sin(a);
+    }
+ 
+    /**
+     * Preconditions: A double value.
+     * Assumptions: User inputs a double value.
+     * Purpose: Calculates the cosine of the user value and returns it.
+     */
+    private double cosine(double a){
+        return Math.cos(a);
+    }
+ 
+    /**
+     * Preconditions: A double value.
+     * Assumptions: User inputs a double value.
+     * Purpose: Calculates the tangent of the user value and returns it.
+     */
+    private double tangent(double a){
+        return Math.tan(a);
+    }
+ 
+    /**
+     * Preconditions: A double value.
+     * Assumptions: User inputs a double value.
+     * Purpose: Calculates the secant of the user value and returns it.
+     */
+    private double secant(double a) {
+        return 1.0 / sine(a);
+    }
+ 
+    /**
+     * Preconditions: A double value.
+     * Assumptions: User inputs a double value.
+     * Purpose: Calculates the cosecant of the user value and returns it.
+     */
+    private double cosecant(double a){
+        return 1.0 / cosine(a);
+    }
+ 
+    /**
+     * Preconditions: A double value.
+     * Assumptions: User inputs a double value.
+     * Purpose: Calculates the cotangent of the user value and returns it.
+     */
+    private double cotangent (double a){
+        return 1.0 / tangent(a);
+    }
+
+    //Roots and Powers
+    /**
+     * Preconditions: Two double values.
+     * Assumptions: User inputs two double values.
+     * Purpose: Calculates the value of the user defined value to the power of n.
+     */
+    private double nthPower(double a, double n){
+        return Math.pow(a, n);
+    }
+
+    /**
+     * Preconditions: Two double values.
+     * Assumptions: User inputs two double values, n is not negative.
+     * Purpose: Calculates the value of the user defined value to the root of n.
+     */
+    private double nthRoot(double a , double n){
+        return Math.pow(a, 1 / n);
+    }
+}
