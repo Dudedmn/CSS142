@@ -1,0 +1,361 @@
+import java.util.Scanner;
+/**
+ * YanDaniel_HW_Loops does the following:
+ * Receives a user input in the form of a genomic sequence using Scanner and makes it all uppercase with String.toUpperCase() 
+ * Prompts the user with openingPrompter() and runs all the methods below 
+ * Checks if the input is a valid genome with validGenomeSequence(String) if it is it runs all methods below
+ * Returns the number of 'Cytosine counts'with countOccurrencesOfC(String)
+ * Returns the number of 'Guanine counts' with countOccurrencesOfG(String)
+ * Returns the ratio of 'Cytosine' and 'Guanine' out of the genome with cytosineGuanineFraction(String)
+ * Returns the 'Complement' of the genomic sequence with complementMaker(String)
+ * Prints countOccurrencesOfC(),cytosineGuanineFraction,complementMaker() with printMethods(int,String)
+ * Returns an 'alignment score' comparing the two genomic sequences with alignmentScore(String,String)
+ * Prints the alignment score and the shifted genome sequences with alignmentPrinter(String,String,int)
+ * 
+ * @author Daniel Yan
+ * @date October 29th, 2017
+ */
+public class YanDaniel_HW_Loops
+{
+
+    //Main method to run the code
+    public static void main(String[] args) {
+        openingPrompter();
+    }
+
+    /**
+     * openingPrompter() prompts the user for an input of a genome sequence, and uses the rest of the 
+     * methods in order to properly print out each case as defined in the beginning comments 
+     */
+    public static void openingPrompter(){
+        // //Initializes a scanner object kb
+        Scanner kb = new Scanner(System.in);
+        //boolean variable to test if the input is a valid genome sequence with validGenomeSequence(String)
+        boolean test = false;
+        //Initializing variables for alignmentScore() and alignmentPrinter() and for 
+        //validGenomeSequence() and printMethods()
+        String input = "", input1 = "", input2 = "";
+        //Console prompter for the user to enter valid genome sequences
+        System.out.println("Please enter two valid genome sequences, which is composed of the characters"
+            + " 'A' 'T' 'C' 'G'\nPlease separate them with a line.");
+        //int for alignmentScore() and for the while loop
+        int score = 0, i = 1;
+        //Loops until the user correctly inputs a genome sequence twice (which increments i)
+        while(i != 3){
+            //Takes in the input of the user and makes it all UPPERCASE
+            input = kb.nextLine().toUpperCase();
+            //Assigns the boolean test to the boolean return value of the method validGenomeSequence()
+            test = validGenomeSequence(input);
+            //Makes every first input the same as input1, a parameter for assignmentScore()
+            if(i == 1) {
+                input1 = input;
+            }
+            //If the first input is met (as i is incremented) and test is true,
+            //then input2 is assigned the input
+            else if (i == 2 && test) {
+                input2 = input;
+            }
+            //Runs through the rest of the methods whenever test is true, each method 
+            //is documented by the beginning javadoc comments above and below with printMethods()
+            if(test){
+                printMethods(i,input);
+                //increments i whenever the user correctly inputs a genome sequence
+                i++;
+            }
+            else {
+                //Prints out to the console if the user enters an invalid genome sequence
+                //prompts the user to try again
+                System.out.println("You have entered an invalid genome sequence. Please try again.");
+            }
+
+        }
+        //Prints out the alignment score from input1 and input2 with alignmentPrinter(String,String,int)
+        //alignmentScore(String,String) calculates the alignmentScore and is used as part of the print statement
+        System.out.println(alignmentScore(input1,input2));
+        alignmentPrinter(input1,input2, alignmentScore(input1,input2));
+        
+    }
+
+/**
+ * Prints the methods of countOccurrencesOfC(), cytosineGuanineFraction(), complementMaker() 
+ * to make up the first part of outputted text
+ */
+    public static void printMethods(int i, String input){
+        System.out.println("Sequence " + i + ": " + input);
+        System.out.println("C-count: " + countOccurrencesOfC(input));
+        //printf is used here for the 3 decimal formatting
+        System.out.printf("%s %.3f%n","CG-Ratio:",cytosineGuanineFraction(input));
+        System.out.println("Complement:" + complementMaker(input) + "\n");
+    }
+/**
+ * Tests to see if the entered string is a valid genome sequence
+   */
+    public static boolean validGenomeSequence(String genome){
+        //Ensures that the entered genome is all upper case regardless of input
+        genome = genome.toUpperCase();
+        //boolean variable to determine if the genome entered is valid
+        boolean checkValidGenome = false;
+        //for loop which iterates though each character through the genome
+        for(int i = 0; i < genome.length(); i++){
+            //Checks if each char is one of the four genome basis
+            if(genome.charAt(i) == 'A' || genome.charAt(i) == 'T' ||
+            genome.charAt(i) == 'C' || genome.charAt(i) == 'G'){
+                //If a character for each genome is 'A' or 'T' or 'C' or 'G' and returns true
+                checkValidGenome = true;    
+            }
+            else {
+                //Else if a single character is not one of the valid characters return false
+                //Makes entire genome false as well 
+                checkValidGenome = false;
+                //Ends the loop as there is no need to check the rest of the genome
+                break;
+
+            }
+
+        }
+        //Returns the proper boolean value
+        return checkValidGenome;
+    }
+
+    /**
+     * Returns the number of 'C'character occurences in a given genome 
+     */
+    public static int countOccurrencesOfC(String genome){
+        //Ignores the case requirement for genome
+        genome = genome.toUpperCase();
+        //int count is used to count the number of 'C' occurrences
+        int count = 0;
+        //for loop is used to iterate through each character in the string
+        for(int i = 0; i < genome.length(); i++){
+            //Condition that checks each occurrence of 'C'
+            if(genome.charAt(i) == 'C'){
+                //Increments count
+                count++;
+            }
+        }
+        //returns int count after the for loop
+        return count;
+    }
+
+    /**
+     * Returns the number of 'G'character occurences in a given genome 
+     * Helper method for cytosineGuanineFraction()
+     */
+    public static int countOccurrencesOfG(String genome){
+        //Ignores the case requirement for genome
+        genome = genome.toUpperCase();
+        //int count is used to count the number of 'C' occurrences
+        int count = 0;
+        //for loop is used to iterate through each character in the string
+        for(int i = 0; i < genome.length(); i++){
+            //Condition that checks each occurrence of 'C'
+            if(genome.charAt(i) == 'G'){
+                //Increments count
+                count++;
+            }
+        }
+        //returns int count after the for loop
+        return count;
+    }
+
+    /**
+     * Returns the fraction of cytosine and guanine counts in the total genome
+     * utilizes both countOccurrences methods in order to do so
+     */
+    public static double cytosineGuanineFraction(String genome) {
+        //Initializes variables needed for proper counting
+        double numOfC = 0.0, numOfG = 0.0, fraction = 0.0;
+        //Ignores case of the genome
+        genome = genome.toUpperCase();
+        //Counts number of 'C' occurrences
+        numOfC = countOccurrencesOfC(genome);
+        //Counts number of 'G' occurrences
+        numOfG = countOccurrencesOfG(genome);
+        //Divides the total occurrences of 'C' and 'G' by the length of the genome
+        fraction = (numOfC + numOfG) / genome.length();
+        //Returns the ratio of 'C' and 'G' from the length of the genome
+        return fraction;
+    }
+
+    /**
+     * Returns the complement genome in the form of a String
+     */
+    public static String complementMaker(String genome) {
+        //String to return
+        String complement = " ";
+        //Ignores the genome casing
+        genome = genome.toUpperCase();
+        //for loop to iterate through each character
+        for(int i = 0; i < genome.length(); i++) {
+            //Multi if-else statement to check characters and append complement to String complement
+            if (genome.charAt(i) == 'A') {
+                complement += "T";
+            }
+            else if (genome.charAt(i) == 'T'){
+                complement += "A";
+            }
+            else if (genome.charAt(i) == 'C') {
+                complement += "G";
+            }
+            else if (genome.charAt(i) == 'G') {
+                complement += "C";
+            }
+        }
+        //Returns complement
+        return complement;
+    }
+
+    /**
+     * Determines the alignment score, given two genome inputs 
+     */
+    public static int alignmentScore(String genome1, String genome2) {
+        //Initializes counting variables necessary
+        int countSimilar = 0,countMax = 0, spaceNum = 0;
+        String spacer = "";
+        //if-else is used to determine which genome is longer, to avoid index out of range
+        //assumes in this case that genome1 is longer
+        if(genome1.length() > genome2.length()){
+            //Iterates through the longer genome as the first loop
+            for(int j = 0; j < genome1.length(); j++){
+                //Resets countSimilar each time the shorter genome is moved one to the right
+                countSimilar = 0;
+                //Adds a space to genome2 for proper space calculation (specified more in alignmentPrinter())
+                if(j > 0 && genome1.length() != genome2.length()){
+                    spacer = " ";
+                    genome2 = spacer + genome2;
+                    spaceNum++;
+                }
+                //Moves the entire shorter genome one to the right and prevents the movement from going
+                //over the length of the larger genome, avoiding an indexOutOfBounds error
+                for(int i =j; (i < genome2.length()) && (genome2.length() <= genome1.length()); 
+                i++){
+                    
+                    //Checks to see if the each character of the shorter genome is equivalent to
+                    //the larger genome
+                    if(genome2.charAt(i) == genome1.charAt(i)){
+                        //Increments if the characters are equivalent
+                        countSimilar++;
+                    }
+                }
+                //Finds the largest equivalent count, or the max alignment score
+                if(countSimilar > countMax){
+                    countMax = countSimilar;
+                }
+            }
+        }
+        //Same logic and process as the above, reversed the genome lengths with genome2 being longer
+        else if(genome2.length() > genome1.length()){
+            for(int j = 0; j < genome2.length(); j++){
+                countSimilar = 0;
+                if(j > 0 && genome1.length() != genome2.length()){
+                    spacer = " ";
+                    genome1 = spacer + genome1;
+                    spaceNum++;
+                }
+                for(int i =j; (i < genome1.length()) && (genome1.length() <= genome2.length()); 
+                i++){
+
+                    if(genome2.charAt(i) == genome1.charAt(i)){
+                        countSimilar++;
+                    }
+                }
+                if(countSimilar > countMax){
+                    countMax = countSimilar;
+                }
+            }
+        }
+        //Third check if the sequences are equal in length, no special logic is necessary
+        else {
+            for(int i = 0; i < genome1.length(); i++){
+                if(genome2.charAt(i) == genome1.charAt(i)){
+                    countSimilar++;
+                }
+            }
+            //Given the sequence lengths are equivalent, countSimilar and countMax are equivalent
+            countMax = countSimilar;
+        }
+        //Returns the max number of counts
+        return countMax;
+    }
+    /**
+     * Prints out the value of alignmentScore() and properly shifts the two entered genome
+     * sequences for the max alignment score
+       */
+    public static void alignmentPrinter(String genome1, String genome2, int maxCount){
+        //Initializes multiple String variables to shift the genome
+        String spacer = "", shortGenome = " ", longGenome = " ";
+        //Initializes counting variables similar to alignmentScore() with space ints
+        int countSimilar = 0, countMax = 0, spaceNum = 0, spaceMax = 0;
+        //if-else is used to determine which genome is longer, to avoid index out of range
+        if(genome1.length() > genome2.length()){
+            //Assigns which genome is shorter and which is longer
+            shortGenome = genome2;
+            longGenome = genome1;
+            //Iterates in a similar process as assignmentScore() however a spacer if statement is added
+            for(int j = 0; j < genome1.length(); j++){
+                countSimilar = 0;
+                //Whenever j is incremented and genome2's length is not as great as genome1's
+                //add a space to the beginning of the shorter genome (genome2 here)
+                if(j > 0 && genome2.length() != genome1.length()){
+                    spacer = " ";
+                    genome2 = spacer + genome2;
+                    spaceNum++;
+                }
+                for(int i =j; (i < genome2.length()) && (genome2.length() <= genome1.length()); 
+                i++){
+
+                    if(genome2.charAt(i) == genome1.charAt(i)){
+                        countSimilar++;
+                    }
+                }
+                //Whenever countMax is updated, spaceMax is assigned to the space counts
+                //if countMax is no longer updated, spaceMax is the correct number of spaces
+                if(countSimilar > countMax){
+                    countMax = countSimilar;
+                    spaceMax = spaceNum;
+                }
+            }
+        }
+       //Same as the above process, with genome lengths reversed
+        else if(genome2.length() > genome1.length()){
+            shortGenome = genome1;
+            longGenome = genome2;
+            for(int j = 0; j < genome2.length(); j++){
+                countSimilar = 0;
+                if(j > 0 && genome1.length() != genome2.length()){
+                    spacer = " ";
+                    genome1 = spacer + genome1;
+                    spaceNum++;
+                }
+                for(int i =j; (i < genome1.length()) && (genome1.length() <= genome2.length()); 
+                i++){
+
+                    if(genome2.charAt(i) == genome1.charAt(i)){
+                        countSimilar++;
+                    }
+                }
+                if(countSimilar > countMax){
+                    countMax = countSimilar;
+                    spaceMax = spaceNum;
+                }
+            }
+        }
+        //A simple assignment as both genomes are equivalent in length
+        else {
+            longGenome = genome1;
+            shortGenome = genome2;
+        }
+        //Adds the correct amount of spaces for the shorterGenome 
+        //The reason for shortGenome being declared separately is to avoid being overwritten in the
+        //for loops, same with the longGenome
+        for(int i = 0; i < spaceMax; i++){
+            spacer = " ";
+            shortGenome = spacer + shortGenome;
+        }
+        //Prints out the best alignment score and shifts the genome sequences with the correct spaces
+        System.out.println("Best alignment score is: " + maxCount);
+        System.out.println(longGenome+ "\n" + shortGenome);
+    }
+}
+
+
