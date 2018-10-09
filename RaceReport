@@ -1,0 +1,92 @@
+
+/**
+ * Writes the report of the race from the Race class and ReportDriver class. 
+ * Contains one method.
+ * 
+ * writeReport() - Prints out each place of each racer (first, second, and third as applicable),
+ * calculates the average and range, and determines whether there was a tie in first or 
+ * second place or not.
+ *
+ * @author (Daniel Yan)
+ * @version (December 2nd, 2017)
+ */
+public class RaceReport
+{   
+    /**
+     * Preconditions: None
+     * Postconditions: Prints out a report of the race and asks whether the user wants to 
+     * 'race' again.
+     * Description: Posts a report that takes three inputs from race.timeInput() and
+     * sorts the inputs, returning an array. Prints the places of each racers and determines 
+     * whether there was a tie for first or second place. Prints the range and average of the
+     * racer times. Asks the user if they want to run another 'race' again.
+       */
+    //This method is public as it will be used by Race class 
+    public void writeReport(){
+        //Initializes a new Race class object in order to use several Race class methods
+        Race race = new Race();
+        //Creates a double array from sortTimesAscending() and timeInput() 
+        //which contains the sorted elements (least to greatest) from timeInput()
+        //in the double[] numArr
+        double[] numArr = race.sortTimesAscending(race.timeInput());
+        //Sets each appropriate value, given that numArr is already sorted
+        double min = numArr[0], mid = numArr[1], max = numArr[2];
+        //Initializes several variables necessary for later calculations
+        double total = 0, range = 0, average = 0;
+        //Calculates range
+        range = max - min;
+        //Calculates average
+        average = (min + max + mid) / 3.0;
+        //Prints out the places of each racer from user input
+        System.out.printf("%s %.2f%n","First place (time in seconds):", min);
+        System.out.printf("%s %.2f%n","Second place (time in seconds):", mid);
+        System.out.printf("%s %.2f%n","Third place (time in seconds):", max);
+        //Blank line
+        System.out.println();
+        //Determines whether there was a tie or not
+        race.raceTimeTies(min, mid, max);
+        //Prints out the range and average of the races
+        System.out.printf("%s %.2f%n","The range of the race times (in seconds):", range);
+        System.out.printf("%s %.2f%n","The average time of all racers (in seconds):", average);
+        //Asks the user whether they want to generate another report
+        race.choice();
+    }
+    
+    //Testing method for writeReport()
+      // public void testWriteReport(){
+        // //Initializes a new Race class object in order to use several Race class methods
+        // Race race = new Race();
+        // //Creates a double array from sortTimesAscending() and timeInput() 
+        // //which contains the sorted elements (least to greatest) from timeInput()
+        // //in the double[] numArr
+        // double[] numArr = race.sortTimesAscending(race.timeInput());
+        // for(int i = 0; i < numArr.length; i++){
+            // System.out.print("numArr index " + i + " has the value of: " + numArr[i] + "\n");
+        // }
+        // //Sets each appropriate value, given that numArr is already sorted
+        // double min = numArr[0], mid = numArr[1], max = numArr[2];
+        // System.out.println("Min: " + min + " Mid: " + mid + " Max: " + max);
+        // //Initializes several variables necessary for later calculations
+        // double total = 0, range = 0, average = 0;
+        // //Calculates range
+        // range = max - min;
+        // System.out.println("Range: " + range);
+        // //Calculates average
+        // average = (min + max + mid) / 3.0;
+        // System.out.println("Average: " + range);
+        // //Prints out the places of each racer from user input
+        // System.out.printf("%s %.2f%n","First place (time in seconds):", min);
+        // System.out.printf("%s %.2f%n","Second place (time in seconds):", mid);
+        // System.out.printf("%s %.2f%n","Third place (time in seconds):", max);
+        // //Blank line
+        // System.out.println();
+        // //Determines whether there was a tie or not
+        // race.raceTimeTies(min, mid, max);
+        // //Prints out the range and average of the races
+        // System.out.printf("%s %.2f%n","The range of the race times (in seconds):", range);
+        // System.out.printf("%s %.2f%n","The average time of all racers (in seconds):", average);
+        // //Asks the user whether they want to generate another report
+        // //race.choice();
+    // }
+
+}
