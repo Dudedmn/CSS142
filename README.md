@@ -1,2 +1,2 @@
 # CSS142
-Contains Java mode during CSS 142 course.
+Contains Java code during CSS 142 course.
