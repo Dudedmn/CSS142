@@ -1,0 +1,159 @@
+import java.util.*;
+import java.io.*;
+/**
+ * Skydiver calculator program that calculates a skydiver's velocity with air resistance
+ * Uses the following methods:
+ * prompter() - Takes no arguments, prompts the user to input data for diveResult()
+ * diveResult (double, double, double, double, String) - Takes 5 doubles and 1 String, 
+ * the String is the file name of the output resutls from the 5 doubles that are used to calculate
+ * the current time and velocity of the skydiver
+ *
+ * @author Daniel Yan
+ * @date November 13th, 2017
+ */
+public class YanDaniel_HW_Arrays
+{   //air density is 1.14 kg/m^3, gravity acceleration is 9.81 m/s^2
+    //These variables are declared as static to make it easier to run test methods 
+    //final is used for variables that will not change 
+    static final double AIRDENSITY = 1.14, GACCEL = 9.81;
+    //These variables are used in either diveResult() or testDiveResult()
+    static double mass, csArea, dragCO, endTime, timeStep;
+    public static void main(String[] args) throws IOException{
+        //Testing method with the parameters used in the Arrays HW pdf
+        //testDiveResult(80, 1.035, 0.581, 16, 0.1);
+        prompter();
+
+    }
+    /**
+      * Prompts the user with Scanner objects and System.out.println() statements to input the 
+      * proper values for diveResult() 
+      * 
+      * Preconditions: None
+      * Postconditions: Assigns a user-determined value to double mass, csArea, dragCO, endtime, and timeStep
+      * File name with extension is also user assigned, diveResult() is able to run without errors
+      * Asks user to do another 'dive' through reassignment of values and calculations of diveResult()
+      * 
+      */
+    public static void prompter(){
+        //Declares 2 strings, fileName is to store a Scanner String, while choice is to 
+        //continue or to end the while loop
+        String fileName, choice = "y";
+        //Endless loop where the user can decide to say yes or no to continue.
+        while(choice.equalsIgnoreCase("y")){
+            //Series of prompts that ask the user to input value that is then assigned to the 
+            //corresponding variable 
+            //We will assume that there are no InputExceptions in the Scanner from the user
+            String diveOutput = "";
+            Scanner kb = new Scanner(System.in);
+            System.out.println("Enter the mass of the skydiver (kg): ");
+            mass = kb.nextDouble();
+            System.out.println("Enter the cross-sectional area of the skydiver (mˆ2): ");
+            csArea = kb.nextDouble();
+            System.out.println("Enter the drag coefficient of the skydiver: "); 
+            dragCO = kb.nextDouble();
+            System.out.println("Enter the ending time (sec): "); 
+            endTime = kb.nextDouble();
+            System.out.println("Enter the time step (sec): ");
+            timeStep = kb.nextDouble();
+            //This is used to get rid of the \n problem from Scanner
+            kb.nextLine();
+            System.out.println("Enter the output filename: ");
+            //We will assume that the user inputs the filename extension at the end of the file
+            fileName = kb.nextLine();
+            System.out.println("Writing out file. Here are the first few lines:");
+            diveResult(mass, csArea, dragCO, endTime,timeStep, fileName);
+            //Asks the user to continue another dive or not
+            System.out.println("Enter another dive? ([y]/[n]): ");
+            choice = kb.nextLine();
+           
+
+        }
+        //End message for the user
+        System.out.println("Thanks for using the SkyDive program...");
+    }
+
+    /**
+     * 
+     * Calculates the velocity of a skydiver given the appropriate parameters in seconds
+     * as defined by timeStep. 
+     * Outputs the file name the user enters in a separate file.
+     * 
+     * Preconditions: double mass, csArea, dragCO, endTime, timeStep; String fileName; Are all 
+     * initialized correctly by the user
+     * Postconditions: Velocity of the diver is calculated alongside with the timeStep increments, 
+     * which is then outputted through FileOutputStream and PrintWriter to the user-defined file
+     * 
+       */
+    
+    public static void diveResult(double mass, double csArea, double dragCO, double endTime, 
+    double timeStep, String fileName){
+        //File classes are declared here so they may be used outside of the try-catch block
+        FileOutputStream fos = null;
+        PrintWriter output = null;
+        //Try-catch is used in case file cannot be created
+        try{
+            fos = new FileOutputStream(fileName);
+            output = new PrintWriter(fos);
+        }
+        //Assume that there will only be a file error here
+        catch (IOException e) {
+            System.err.println("Failed to create file");
+            System.exit(0);
+        }
+        //Initializes an array size, given the number of values may vary
+        int arraySize = 0; 
+        //Initializes two doubles where constant is the calculation of all constant values 
+        //and store is a simple counter for each increment of timeStep
+        double constant,store = timeStep;
+        //arraySize is varied as dependent on endTime and timeStep, it's cast to int as
+        //array indexes use int not double
+        arraySize = (int) (endTime / timeStep);
+        //Initializes the array with the proper size
+        double[] velocityArray = new double[arraySize];
+        //Sets the first element in the array to be 0, as the initial velocity is always 0
+        velocityArray[0] = 0;
+        //Calculates the constant dependent on user input according to the foruma given in Arrays HW pdf
+        constant = ((dragCO*AIRDENSITY*csArea) / (2 * mass));
+        //Starts from the first index (we already initialized the zeroth one) so no out of bounds occur
+        for(int i = 1; i < velocityArray.length; i++) {
+            //Stores each incrementation of timeStep
+            store += timeStep;
+            //Assigns the current index of velocity to to the proper velocity based upon
+            //prior velocities in a previous index, velocityArray[0] is already initialized
+            velocityArray[i] = velocityArray[i - 1] + (GACCEL - constant * 
+                ((velocityArray[i - 1]) * velocityArray[i - 1])) * timeStep;
+            //Prints out the store value (timeStep increments) and the velocity to the user named
+            //file in order to store it as a separate file
+            output.printf("%.2f, %.5f%n",store, velocityArray[i]);
+            //Prints out the store value and velocity to the console
+            System.out.printf("%.2f, %.5f%n",store, velocityArray[i]);    
+
+        }
+        //Closes the output stream 
+        output.close();
+    }
+    /*
+    //This is the testing method
+    //The velocity calculated by the skydiver shouldn't exceed terminal velocity
+    public static void testDiveResult(double mass, double csArea, double dragCO, double endTime, 
+    double timeStep){
+
+    System.out.println("Terminal velocity: " + Math.sqrt((2*mass*GACCEL)/(AIRDENSITY*csArea*dragCO)));
+    int arraySize = 0; 
+    double constant,store = timeStep;
+    arraySize = (int) (endTime / timeStep);
+    double[] velocityArray = new double[arraySize];
+    velocityArray[0] = 0;
+    constant = ((dragCO*AIRDENSITY*csArea) / (2 * mass));
+    System.out.println(constant);
+    for(int i = 1; i < velocityArray.length; i++) {
+    store += timeStep;
+    velocityArray[i] = velocityArray[i - 1] + (GACCEL - constant * 
+    ((velocityArray[i - 1]) * velocityArray[i - 1])) * timeStep;
+    System.out.printf("%.2f, %.5f%n",store, velocityArray[i]);    
+    
+    }
+
+    }
+     */
+}
