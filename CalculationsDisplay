@@ -1,0 +1,57 @@
+import java.util.Scanner;
+/**
+ * Display of the calculator simulator, being the first menu screen the user sees and allows the user to select a specific function of the calculator to use.
+ * 
+ * Method included:
+ * selection() - Gives the user a list of choices (as a menu) and asks the user to choose one. A switch case is then used to correspond to each numerical option
+ * in order to call the relevant methods.
+ *
+ * @author (Daniel Yan)
+ * @version (12/5/2017)
+ */
+public class Display {
+    
+    public void selection(){
+        Calculations calc = new Calculations();    
+        Scanner kb = new Scanner(System.in);
+        //Menu for the user to see
+        System.out.println("Daniel's Calculator Simulator!\n" +
+        "Computational Choices:\n " +
+            " 0. Quit\n " +
+            " 1. Basic functions\n " +
+            " 2. Trigonmetric Functions\n " +
+            " 3. Logarithmic Functions\n " +
+            " 4. Matrices\n ");
+        int choice = 0;
+        choice = kb.nextInt();
+        //Switch case that calls the relevant methods
+        switch(choice){
+            case 0:
+            System.out.println("Hope to see you again.");
+            System.exit(0);
+            break;
+
+            case 1:
+            calc.chooseCalc();
+            break;
+
+            case 2:
+            calc.chooseTrig();
+            break;
+
+            case 3:
+            calc.chooseLog();
+            break;
+            
+            case 4:
+            calc.chooseMatrix();
+            break;
+            //Default catches an invalid numerical output, a slight recursive method is used here as it will recall the method selection() for the user to use again.
+            default:
+            System.out.println("Incorrect number inputted, please retry.");
+            selection();
+            break;
+        }
+
+    }
+}
