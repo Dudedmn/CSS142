@@ -1,0 +1,124 @@
+import java.util.Scanner;
+/**
+ * Creates a 'Mario Board setting' in text as well as allowing 
+ * the user to define the 'coin' and 'mario'
+ *
+ * @Daniel Yan 
+ * @October 4th, 2017
+ */
+public class YanDaniel_HW_Methods
+{
+    // Creates a global Scanner object
+    static Scanner scan = new Scanner(System.in);
+    //Initializes a couple empty String to use for input
+    static String coin = "",mario = "";
+
+    public static void main(String[] args){
+        //Runs the pre-built programs that initializes the Mario scene
+        // and ensures the user input is present in the methods
+        runProgramOne();
+        runProgramTwo();
+    } 
+
+    /**
+     * Calls each segment separately to create the MarioBoard level
+     */
+    public static void runProgramOne(){
+        // escape sequence \n creates a new line
+        System.out.println("Mario Board 1:\n");
+        marioSegment1();
+        marioSegment2();
+        marioSegment2();
+        marioSegment1();
+        marioFlag();
+    }
+
+    /**
+     * Calls each segment separately to create the MarioBoard level, with a 
+     * slightly different level design than runProgramOne()
+     */
+    public static void runProgramTwo(){
+        // asks the user for input
+        opening();
+        marioSegment1();
+        marioSegment2();
+        marioSegment2();
+        marioSegment1();
+        marioFlag();
+    }
+
+    /**
+     * Prompts the user to give a graphical (text) representation of a coin and mario
+     */  
+    public static void opening(){
+        System.out.println("\nMario board 2: \n");
+        System.out.println("What does Mario look like?");  
+        mario = scan.nextLine(); 
+        System.out.println("What does a Coin look like?");
+        coin = scan.nextLine();
+        System.out.println("Here is your level . . .");
+    }
+
+    /**
+     * Outputs the first segment for MarioBoard in a straight line 
+     * using System.out.println();
+     */
+    public static void marioSegment1(){
+        // I use escape sequences \n to create a new line and make it more readable
+        // Each \n line break is visually represented by a new line break
+        //'coin' is referencing the static String in the class 
+        // initialized within the first 2 lines and defined by the user
+        System.out.println("||\n" +
+            "||\n" +
+            "||" + coin + "\n" +
+            "||" + coin + "\n" +
+            "||" + coin + "\n" +
+            "||\n");
+    }
+
+
+    /**
+     * Outputs the second segment for MarioBoard with a straight line 
+     * using System.out.println(); and a few [?] item boxes
+     */
+    public static void marioSegment2(){
+        // I use the \t escape sequence to reduce the number of spaces
+        // 8 spaces is referenced per \t
+        System.out.println("||\n" +
+            "||\t[?]" + coin + "\n" +
+            "||\n" +
+            "||\t[?]" + coin + "\n" +
+            "||\n" +
+            "||\n");
+    }
+
+    /**
+     * Outputs the third segment for MarioBoard which is a rising set of 
+     * blocks 
+     */
+    public static void marioSegment3(){
+        System.out.println("||\n" +
+            "||||\n" +
+            "||||||\n" +
+            "||||||||\n" +
+            "||||||||||\n" +
+            "||||||||||||\n");
+    }
+
+    /**
+     * Outputs the third segment for MarioBoard which is a rising set of 
+     * blocks and adds a 'flag' at the end alongside the user-defined 'mario'
+     */
+    public static void marioFlag() {
+        System.out.println("||\n" +
+            "||||\n" +
+            "||||||\n" +
+            "||||||||\n" +
+            "||||||||||\n" +
+            "||||||||||||" + mario + "\n" +
+            "||\n" +
+            "||\t\t^\n" +
+            "|----------------");
+    }
+
+}
