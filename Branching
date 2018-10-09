@@ -1,0 +1,187 @@
+import java.util.Scanner;
+/**
+ * Prompts the user with questions using questions and returns outputs in response to input.
+ *
+ * @author Daniel Yan
+ * @Updated Oct 10th, 2017
+ * @Version 1.1: Updated to make easier reading and testing
+ */
+public class Yan_Daniel_HW_Branching_WarmUp
+{
+    //Defines all global variables needed for each response
+    static Scanner keyboard = new Scanner(System.in);
+    static int num = 0;
+    static double average = 0, temp = 0;
+    static boolean answer = false;
+    static float grade = 0;
+    static char letterGrade = ' ';
+    // There are only 10 prompts as I've combined several together as listed below
+    public static void main(String[] args){
+        //Reponse to number 1.
+        num1();
+        //Response to number 2.
+        num2();
+        //Response to number 3.
+        num3();
+        //Response to number 4. and 5.
+        num4and5();
+        //Response to number 6.
+        num6();
+        //Response to number 7. and 8.
+        num7and8();
+        //Response to number 9. and 10.
+        num9and10();
+        //Response to number 11.
+        num11();
+        //Response to num 12. and 13.
+        num12and13();
+
+    }
+    /** Outputs whether an integer entered is negative or not negative
+     * 
+     */
+  public static void num1(){
+        System.out.println("1. Enter a number (integer)");
+        num = keyboard.nextInt();
+        if (num < 0) {
+            System.out.println("The number is negative");
+        }
+        else {System.out.println("The number is not negative");
+        }
+    }
+    /** Outputs whether an integer is not zero or is zero
+     * 
+     */
+    public static void num2(){
+        System.out.println("\n2. Enter a second number (integer)");
+        num = keyboard.nextInt();
+        if (num == 0) {
+            System.out.println("The number is zero");
+        }
+        else {
+            System.out.println("The number is not zero");
+        }
+    }
+    /** Outputs whether a double is a passing grade or not 
+     * 
+     */
+    public static void num3(){
+        System.out.println("\n3. Enter a third number (double)");
+        average = keyboard.nextDouble();
+        if (average > 64) {
+            System.out.println("A passing grade"); 
+        }
+        else {
+            System.out.println("Not a passing grade");
+        }
+    }
+    /** Outputs whether a boolean value entered is true or not
+     * 
+     */
+    public static void num4and5(){
+        System.out.println("\n4. Is the answer reported true? Enter a Boolean value (true or false)");
+        answer = keyboard.nextBoolean();
+        if (answer == true) {
+            System.out.println("The value was true");
+        }
+        //Response to number 5.
+        else {
+            System.out.println("The value was false");
+        }
+    }
+    /** Outputs whether an integer number is even or odd
+     * 
+     */ 
+    public static void num6(){
+        System.out.println("\n5. Enter another number (integer)");
+        num = keyboard.nextInt();
+        if(num % 2 == 0) {
+            System.out.println("The number is even");
+        }
+        else {
+            System.out.println("The number is odd");
+        }
+    }
+    /** Outputs whether a float number is an 'A' or 'B' or too low
+     * 
+     */
+    public static void num7and8(){
+        System.out.println("\n6. Enter another number (float)");
+        grade = keyboard.nextFloat();
+        if (grade >= 90.0) {
+            System.out.println("The grade is above an 90.0 and thus an 'A'");
+        }
+        //Response to number 8.
+        if (grade >= 80.0 && grade < 90.0){
+            System.out.println("The grade is above or equal to 80.0 but not high enough to be an 'A' thus it's a 'B'");
+        }
+        else if (grade < 80) {
+            System.out.println("Your grade is not high enough to be a 'B'");
+        }
+    }
+    /** Outputs whether the temperature entered is above 78 or lower than or equal to 78
+     *  Additionally outputs whether the temperature is positive and odd or zero and even
+     */
+    public static void num9and10(){
+        System.out.println("\n7. What is the temperature? (double)");
+        temp = keyboard.nextDouble();
+        if (temp > 78) {
+            System.out.println("The temperature is higher than 78 degrees");
+        }
+        else {
+            System.out.println("The temperature is lower than or equal to 78");
+            }
+        
+        if(temp > -1 && temp % 2 != 0 || temp == 0 && temp % 2 == 0) {
+            System.out.println("The temperature is positive and odd or it's 0 and even");
+        }
+        else {
+            System.out.println("The temperature is not positive and odd or zero and even");
+        }
+       
+    }
+    /** Outputs the lettergrade corresponding to the char entered
+     * 
+     */
+    public static void num11(){
+        System.out.println("\n8. Enter a capitalized letter grade (char)");
+        letterGrade = keyboard.next().charAt(0);
+        if(letterGrade == 'A'){
+        System.out.println("The letter grade you entered was 'A'");
+        }
+        else if(letterGrade == 'B'){
+        System.out.println("The letter grade you entered was 'B'");
+        }
+        else if(letterGrade == 'C'){
+        System.out.println("The letter grade you entered was 'C'");
+        }
+        else if(letterGrade == 'D'){
+        System.out.println("The letter grade you entered was 'D'");
+        }
+        else if(letterGrade == 'F'){
+        System.out.println("The letter grade you entered was 'F'");
+        }
+        
+        else {
+        System.out.println("You entered a non-existant letter grade");
+        }
+        
+    }
+    /** Returns the larger integer
+     * 
+     */
+      public static int max(int a, int b) {
+        int bigger = Math.max(a,b);
+        return bigger;
+    }
+    /** Outputs the larger integer entered
+     * 
+     */
+    public static void num12and13() {
+        System.out.println("\n10. Please enter two integers (separate with space): ");
+        int a = keyboard.nextInt(), b = keyboard.nextInt();
+        System.out.println("\nLargest is: " + Math.max(a,b)
+         + "\nSmallest is: " + Math.min(a,b));
+    }
+
+}
