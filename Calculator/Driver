@@ -1,0 +1,15 @@
+
+/**
+ * Driver class for the calculator simulator, simply contains the main methods to run methods from Display and Calculations classes.
+ *
+ * @author (Daniel Yan)
+ * @version (12/5/2017)
+ */
+public class Driver
+{
+   public static void main(String[] args){
+    //Creates a new Display object and runs selection() method
+    Display disp = new Display();
+    disp.selection();
+    }
+}
