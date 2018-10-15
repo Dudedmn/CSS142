@@ -11,7 +11,7 @@ Contains the following projects:
 
 *MarioBoard* - Simple Java String manipulation to mimick a Mario board.
 
-*Classes* - Teaches the concept of Java classes, object, and how they interact with one another.
+*Races* - Teaches the concept of Java classes, object, and how they interact with one another.
 
 *GenomeLoops* - More advanced utilization of loops, containing multiple loops involving String manipulation in Java.
 
