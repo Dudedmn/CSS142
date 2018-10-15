@@ -15,4 +15,4 @@ Contains the following projects:
 
 *GenomeLoops* - More advanced utilization of loops, containing multiple loops involving String manipulation in Java.
 
-*Final Program* - Simple calculator made in Java with user prompts and basic calculator calculations. Utilizes all prior taught concepts.
+*Calculator* - Simple calculator made in Java with user prompts and basic calculator calculations. Utilizes all prior taught concepts.
